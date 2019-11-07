@@ -1,0 +1,489 @@
+<html>
+
+
+<head>
+
+<title>How the UART Serial Communication Protocol Works</title>
+
+<style>
+h2 { color: #7c795d; font-family: 'Trocchi', serif; font-size: 45px; font-weight: normal; line-height: 48px; margin: 0; }
+
+
+.header {
+  display: flex;
+  width: 100%;
+}
+
+.header > div {
+  flex: 1; /*grow*/
+}
+.deviceOne {
+  float: left;
+}
+.deviceTwo {
+  float: right;
+
+}
+
+.totheright {
+  text-align: right;
+  margin-right:1em;
+  font-size:22px;
+}
+
+.totheleft {
+  text-align: left;
+  margin-left:1em;
+   font-size:22px;
+}
+
+.sizeshape{
+	text-align:center;
+	width:300px;
+	height: 300px;
+	-webkit-border-radius: 10px;
+-moz-border-radius: 10px;
+border-radius: 10px;
+border-style: solid;
+  border-width: 3px;
+}
+
+
+.arrow {
+  width: 500px;
+  margin-top:0.5em;
+}
+
+.line {
+  margin-top: 14px;
+  width: 470px;
+  background: green;
+  height: 10px;
+  float: left;
+}
+
+.point {
+  width: 0;
+  height: 0;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-left: 30px solid green;
+  float: right;
+}
+
+.point2 {
+  width: 0;
+  height: 0;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  border-right: 30px solid blue;
+  float: left;
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+<div style="text-align:center; margin-top:1em;">
+			<h2>How the UART Serial Communication Protocol Works</h2>
+</div>
+
+<br/>
+<hr>
+
+
+<div id="message1" style="text-align:center; margin-top:2em">
+			<h4>Press a Key to start the simulation</h4>
+</div>
+
+
+
+
+<div class="header">
+
+<div style="width:100%">
+  <div class="deviceOne sizeshape">
+	
+	<br/>
+    DEVICE 1
+  
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+
+	<div class="totheright" style="color:green">
+		TX
+	</div>
+	<br/>
+	<br/>
+	<br/>
+	<div class="totheright" style="color:blue">
+		RX
+	</div>
+	<br/>
+	<br/>
+	<br/>
+	<div class="totheright" style="color:red">
+		GND
+	</div>
+	<br/>
+  
+  
+  </div>
+</div>  
+
+
+	<div style="width:100%">
+	
+	<br/>
+    <br/>
+	
+	<div  id="startbit2" style="width:25px; height:22px; background-color:#6495ED; color:white; text-align:center; font-weight:bold; display:none">
+			<p>S</p>	
+		</div>
+		
+	<div id="startbit5" style="display:none; width:75px; height:22px; background-color:black; color:white; text-align:center; font-weight:bold;">
+			<p id="dataframecode3"></p>	
+		</div>	
+	
+	<div  id="startbit7" style="width:25px; height:22px; background-color:#00ff00; color:white; text-align:center; font-weight:bold; display:none">
+			<p>0</p>	
+		</div>
+		
+
+	<div  id="startbit11" style="width:25px; height:22px; background-color:red; color:white; text-align:center; font-weight:bold; display:none">
+			<p>1</p>	
+		</div>
+	
+	<div id="empty"><br/><br/></div>
+	
+	
+	
+     <div class="arrow">
+		<div class="line"></div>
+		<div class="point"></div>
+	</div>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<div class="arrow">
+	   <div class="point2"></div>
+		<div class="line" style="background-color:blue;"></div>
+		
+	</div>
+	
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<div class="arrow">
+	   
+		<div class="line" style="background-color:red; width:500px;"></div>
+		
+	</div>
+	
+	
+	
+	</div>
+
+
+
+
+<div style="width:100%">  
+  <div class="deviceTwo sizeshape">
+  <br/>
+    DEVICE 2
+	
+		<br/>
+	<br/>
+	<br/>
+	<br/>
+
+	<div class="totheleft" style="color:green">
+		RX
+	</div>
+	<br/>
+	<br/>
+	<br/>
+	<div class="totheleft" style="color:blue">
+		TX
+	</div>
+	<br/>
+	<br/>
+	<br/>
+	<div class="totheleft" style="color:red">
+		GND
+	</div>
+	<br/>
+  
+	
+	
+	
+  </div>
+</div>
+
+</div>
+
+
+
+<div id="message2" style="text-align:center; margin-top:2em; display:none;">
+	<h3>We have "<b id="letter"> </b>" and the binary version is: <b id="binary"> </b></h3>
+</div>
+
+
+<div class="header">
+	<div style="max-width:400px;">	
+	<p><b>Input:</b>&nbsp;<span id="letter2"></span></p>
+	<p><b>Input in binary:</b>&nbsp;<span id="binary2"></span></p>
+	<p><b>Baud rate:</b>&nbsp;<span id="binary3"></span></p>
+	
+	
+	
+	
+	</div>	
+		
+	<div style="text-align:left; width:700px;">	
+		<h4 id="title"></h4>
+		<p id="text"></p>	
+		<div  id="startbit" style="width:25px; height:22px; background-color:#6495ED; color:white; text-align:center; font-weight:bold; display:none">
+			<p>S</p>	
+		</div>
+		<div  id="dataframe" style="width:100px; height:22px; background-color:black; color:white; text-align:center; font-weight:bold; display:none">
+			<p id="dataframecode"></p>	
+		</div>
+		
+		<div  id="startbit6" style="width:25px; height:22px; background-color:#00ff00; color:white; text-align:center; font-weight:bold; display:none">
+			<p>0</p>	
+		</div>
+		
+		<div  id="startbit10" style="width:25px; height:22px; background-color:red; color:white; text-align:center; font-weight:bold; display:none">
+			<p>1</p>	
+		</div>
+	
+	</div>
+	
+	<div style="padding-left:4em">
+		<p id="message4" style="display:none;"><b>Start bit:</b>&nbsp; <div id="startbit3" style="display:none; width:25px; height:22px; background-color:#6495ED; color:white; text-align:center; font-weight:bold;">
+			<p>S</p>	
+		</div></p>
+		
+		<p id="message5" style="display:none;"><b>Data Frame:</b>&nbsp; <div id="startbit4" style="display:none; width:100px; height:22px; background-color:black; color:white; text-align:center; font-weight:bold;">
+			<p id="dataframecode2"></p>	
+		</div></p>
+		
+		<p id="message6" style="display:none;"><b>Parity bit:</b>&nbsp; <div id="startbit8" style=" display:none; width:25px; height:22px; background-color:#00ff00; color:white; text-align:center; font-weight:bold; ">
+			<p>0</p>	
+		</div>
+		</p>
+		
+		
+		<p id="message7" style="display:none;"><b>Stop bit:</b>&nbsp; <div id="startbit12" style=" width:25px; height:22px; background-color:red; color:white; text-align:center; font-weight:bold;  display:none; "><p>1</p>	
+		</div>
+		</p>
+		
+		
+	</div>
+	
+</div>
+
+
+
+
+
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+var timer = 0;
+var count=0;
+
+function convert(a) {
+  var output="";
+
+  for (var i = 0; i < a.length; i++) {
+      output += a[i].charCodeAt(0).toString(2) + " ";
+  }
+  return output;
+}
+
+function startTimer(a) {
+  var t=convert(a);
+  
+  
+ 
+  timer = setInterval(function() {
+	
+  
+	if(count == 2){
+		document.getElementById("message1").style.display="none";
+		document.getElementById("message2").style.display="block";
+		document.getElementById("letter").textContent=a;
+		document.getElementById("binary").textContent=t;
+		document.getElementById("letter2").textContent=a;
+		document.getElementById("binary2").textContent=t;
+	
+	} //
+	
+	
+	if(count == 5){
+		document.getElementById("title").textContent="First step: Baud rate";
+		document.getElementById("text").textContent="Baud rates can be just about any value within reason. The only requirement is that both devices operate at the same rate. One of the more common baud rates, especially for simple stuff where speed isn't critical, is 9600 bps. Other standard baud are 1200, 2400, 4800, 19200, 38400, 57600, and 115200.";
+	}//
+  
+	if(count == 7){
+		
+		document.getElementById("binary3").textContent="9600";
+	}//
+	
+	if(count == 12){
+		document.getElementById("title").textContent="Second step: Data byte - Sending start bit";
+		document.getElementById("text").textContent="The transmitting UART  package adds start and stop bits to the data packet being transferred. These bits define the beginning and end of the data packet so the receiving UART knows when to start reading the bits.";
+		document.getElementById("startbit").style.display="block";
+		document.getElementById("startbit2").style.display="block";
+		document.getElementById("startbit3").style.display="block";
+		document.getElementById("message4").style.display="block";
+		document.getElementById("empty").style.display="none";
+		
+	}//
+	
+	if(count > 12  && count < 33){
+		var x = $("#startbit2").offset().left;
+		var y = $("#startbit2").offset().top;
+		console.log('x: ' + x + ' y: ' + y);
+	
+	    $("#startbit2").offset({ top: y, left: x+25});
+		console.log(count);
+	}//
+	
+	if(count == 34){
+		document.getElementById("startbit2").style.display="none";
+		document.getElementById("empty").style.display="block";
+	}//
+	
+	if(count == 36){
+		document.getElementById("startbit2").style.display="none";
+		document.getElementById("empty").style.display="block";
+	}//
+	
+	if(count == 39){
+	
+		document.getElementById("startbit").style.display="none";
+		document.getElementById("title").textContent="Third step: Sending data frame (the input received)";
+		document.getElementById("text").textContent="The data frame contains the actual data being transferred. It can be 5 bits up to 8 bits long if a parity bit is used. If no parity bit is used, the data frame can be 9 bits long. In most cases, the data is sent with the least significant bit first.";
+		document.getElementById("dataframe").style.display="block";
+		document.getElementById("dataframecode").textContent=t;
+		document.getElementById("startbit4").style.display="block";
+		document.getElementById("message5").style.display="block";
+		document.getElementById("dataframecode2").textContent=t;
+	}//
+	
+	if(count == 40){
+		document.getElementById("empty").style.display="none";
+		document.getElementById("startbit5").style.display="block";
+		document.getElementById("dataframecode3").textContent=t;
+    }//
+	
+	if(count > 40 && count < 72){
+		var x = $("#startbit5").offset().left;
+		var y = $("#startbit5").offset().top;
+		
+	
+	    $("#startbit5").offset({ top: y, left: x+15});
+		
+	
+	
+	}//
+	
+	if(count ==74){
+		document.getElementById("empty").style.display="block";
+		document.getElementById("startbit5").style.display="none";
+		document.getElementById("title").textContent="Fourth step: Parity bit";
+		document.getElementById("text").textContent="Parity describes the evenness or oddness of a number. The parity bit is a way for the receiving UART to tell if any data has changed during transmission. After the receiving UART reads the data frame, it counts the number of bits with a value of 1 and checks if the total is an even or odd number. If the parity bit is a 0 (even parity), the 1 bits in the data frame should total to an even number. If the parity bit is a 1 (odd parity), the 1 bits in the data frame should total to an odd number. When the parity bit matches the data, the UART knows that the transmission was free of errors. ";
+		document.getElementById("dataframe").style.display="none";
+		document.getElementById("startbit6").style.display="block";
+		
+	
+	}//
+	
+	if(count ==75){
+		document.getElementById("startbit7").style.display="block";
+		document.getElementById("empty").style.display="none";
+		document.getElementById("startbit8").style.display="block";
+		document.getElementById("message6").style.display="block";
+	}//
+	
+	
+	if(count > 76 && count < 97 ){
+		var x = $("#startbit7").offset().left;
+		var y = $("#startbit7").offset().top;
+		
+	
+	    $("#startbit7").offset({ top: y, left: x+25});
+		
+	
+	
+	}//
+	
+	if(count == 98 ){
+		document.getElementById("startbit6").style.display="none";
+		document.getElementById("startbit7").style.display="none";
+		document.getElementById("empty").style.display="block";
+		document.getElementById("title").textContent="Final step: Stop bit";
+		document.getElementById("text").textContent="To signal the end of the data packet, the sending UART drives the data transmission line from a low voltage to a high voltage for at least two bit durations.";
+		document.getElementById("startbit10").style.display="block";
+	}//
+	
+	if(count == 99 ){
+		document.getElementById("startbit11").style.display="block";
+		document.getElementById("startbit12").style.display="block";
+		
+		document.getElementById("message7").style.display="block";
+		document.getElementById("empty").style.display="none";
+	}//
+	
+	if(count > 100 && count < 120){
+		var x = $("#startbit11").offset().left;
+		var y = $("#startbit11").offset().top;
+		console.log('x: ' + x + ' y: ' + y);
+	
+	    $("#startbit11").offset({ top: y, left: x+25});
+		console.log(count);
+	
+	
+	}//
+	if(count == 121 ){
+		document.getElementById("startbit11").style.display="none";
+	}//
+	
+	if(count == 122 ){
+		document.getElementById("startbit10").style.display="none";
+		document.getElementById("empty").style.display="block";
+		document.getElementById("title").textContent="Process completed:";
+		document.getElementById("text").textContent=" The transmitting UART receives data in parallel from the data bus, The transmitting UART adds the start bit, parity bit, and the stop bit(s) to the data frame, The entire packet is sent serially from the transmitting UART to the receiving UART. The receiving UART samples the data line at the pre-configured baud rate,  The receiving UART discards the start bit, parity bit, and stop bit from the data frame, he receiving UART converts the serial data back into parallel and transfers it to the data bus on the receiving end";
+	
+	}//
+	
+	count++;
+  }, 1000);
+}
+
+document.onkeypress = function(evt) {
+    evt = evt || window.event;
+    var charCode = evt.keyCode || evt.which;
+    var charStr = String.fromCharCode(charCode);
+	startTimer(charStr) ;
+    
+};
+
+</script>
+
+</html>
